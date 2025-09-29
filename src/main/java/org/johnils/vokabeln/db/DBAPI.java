@@ -234,4 +234,17 @@ public class DBAPI {
 
         return ResponseEntity.ok("ok");
     }
+
+
+    //SESSION
+    @PostMapping("/session/start")
+    public ResponseEntity<String> startSession(HttpServletRequest request, @RequestBody Map<String, String> body) {
+
+        return ResponseEntity.ok("ok"); //TODO
+    }
+    @PostMapping("/session/getVocab")
+    public Vocab getSessionVocab(HttpServletRequest request, @RequestBody Map<String, String> body) {
+
+        return new Vocab("Hello", "There"); //TODO
+    }
 }

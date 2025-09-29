@@ -184,6 +184,20 @@
     .modal-content button:hover {
       background: #0056b3;
     }
+    #submitAnswer {
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      background: #007bff;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+
+    #submitAnswer:hover {
+      background: #0056b3;
+    }
 
     #dashboardPage {
       padding: 20px;
@@ -214,6 +228,18 @@
     }
 
     #backBtn:hover {
+      color: #0056b3;
+    }
+    #backToVocab {
+      background: none;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+      color: #007bff;
+      transition: color 0.2s;
+    }
+
+    #backToVocab:hover {
       color: #0056b3;
     }
 
@@ -377,6 +403,24 @@
             <div id="vocabList"></div>
         </div>
     </main>
+
+    <!-- Session Page -->
+    <div id="sessionPage" style="display:none;">
+        <header>
+            <button id="backToVocab">← </button>
+            <h2 id="sessionLanguage" style="text-align:center; flex:1;">Language</h2>
+        </header>
+
+        <main style="display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:80vh;">
+            <h3 id="questionWord">Loading...</h3>
+
+            <input type="text" id="answerInput" placeholder="Your translation" style="margin: 15px 0; padding: 10px; font-size: 16px; width: 300px; text-align:center;">
+            <button id="submitAnswer">Submit</button>
+
+            <p id="feedback" style="margin-top: 15px; font-weight:bold;"></p>
+        </main>
+    </div>
+
     <script>
         document.addEventListener("DOMContentLoaded", async () => {
           try {
@@ -667,7 +711,7 @@
 
           const number = sessionCount.value.trim();
 
-
+          startSession();
         });
 
         sessionModal.addEventListener("click", (e) => {
@@ -730,6 +774,67 @@
         });
 
 
+        //TODO
+
+        let currentVocab = null; // store the word + translation
+
+        async function startSession() {
+          document.getElementById("sessionLanguage").textContent = currentLanguage;
+
+          document.getElementById("vocabPage").style.display = "none";
+          document.getElementById("sessionPage").style.display = "block";
+
+          await loadNextVocab();
+        }
+
+
+        async function loadNextVocab() {
+          try {
+            const res = await fetch("/db/session/getVocab", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({language: currentLanguage})
+            });
+            if (res.ok) {
+              currentVocab = await res.json();
+              // Example response: { word: "Haus", translation: "house", language: "German" }
+
+              document.getElementById("questionWord").textContent = currentVocab.word;
+              document.getElementById("answerInput").value = "";
+              document.getElementById("feedback").textContent = "";
+            } else {
+              document.getElementById("questionWord").textContent = "No vocab available!";
+            }
+          } catch (err) {
+            console.error("Error fetching vocab:", err);
+          }
+        }
+
+        function checkAnswer() {
+          const userAnswer = document.getElementById("answerInput").value.trim().toLowerCase();
+          const feedback = document.getElementById("feedback");
+
+          if (!currentVocab) return;
+
+          if (userAnswer === currentVocab.translation.toLowerCase()) {
+            feedback.textContent = "✅ Correct!";
+            feedback.style.color = "green";
+          } else {
+            feedback.textContent = `❌ Wrong! Correct answer: ${currentVocab.translation}`;
+            feedback.style.color = "red";
+          }
+        }
+
+        document.getElementById("submitAnswer").addEventListener("click", checkAnswer);
+
+        document.getElementById("answerInput").addEventListener("keypress", (e) => {
+          if (e.key === "Enter") checkAnswer();
+        });
+
+        document.getElementById("backToVocab").addEventListener("click", () => {
+          document.getElementById("sessionPage").style.display = "none";
+          document.getElementById("vocabPage").style.display = "block";
+        });
     </script>
 
     </body>

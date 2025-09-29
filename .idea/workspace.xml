@@ -4,35 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="baa4b8e1-93ba-4c7e-b5f2-04d8ea8c2cf2" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/betterCommentsSettings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/dictionaries/project.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/discord.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build.gradle.kts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gradlew" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gradlew.bat" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/settings.gradle.kts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/johnils/vokabeln/IndexController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/johnils/vokabeln/Main.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/johnils/vokabeln/auth/AuthController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/johnils/vokabeln/core/DashboardController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/johnils/vokabeln/db/DBAPI.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/johnils/vokabeln/db/DBLoader.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/johnils/vokabeln/db/User.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/johnils/vokabeln/db/UserController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/johnils/vokabeln/db/Vocab.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/application.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/websites/dashboard/index.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/websites/login/index.html" afterDir="false" />
+    <list default="true" id="baa4b8e1-93ba-4c7e-b5f2-04d8ea8c2cf2" name="Changes" comment="Initial Files">
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/johnils/vokabeln/db/SessionController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/johnils/vokabeln/db/DBAPI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/johnils/vokabeln/db/DBAPI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/websites/dashboard/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/websites/dashboard/index.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -55,6 +31,18 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "Joh-Nils"
+  }
+}]]></component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/Joh-Nils/Vocabulary-Trainer.git",
+    "accountId": "d473d6f6-e972-4b15-bb45-f62f35f9988f"
+  }
+}]]></component>
   <component name="GradleScriptDefinitionsStorage" workingDir="$PROJECT_DIR$" gradleHome="C:\Users\Fried\.gradle\wrapper\dists\gradle-8.14-bin\38aieal9i53h9rfe7vjup95b9\gradle-8.14" javaHome="C:\Users\Fried\.jdks\openjdk-23.0.2" gradleVersion="8.14" />
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 5
@@ -66,24 +54,24 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "DefaultHtmlFileTemplate": "HTML File",
-    "Gradle.Vokabeln [:org.johnils.vokabeln.Main.main()].executor": "Run",
-    "Gradle.Vokabeln [:org.johnils.vokabeln.start.Main.main()].executor": "Run",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "git-widget-placeholder": "master",
-    "kotlin-language-version-configured": "true",
-    "onboarding.tips.debug.path": "C:/Users/Fried/IdeaProjects/Vokabeln/src/main/java/org/example/Main.java",
-    "project.structure.last.edited": "Modules",
-    "project.structure.proportion": "0.0",
-    "project.structure.side.proportion": "0.0",
-    "settings.editor.selected.configurable": "preferences.pluginManager"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
+    &quot;Gradle.Vokabeln [:org.johnils.vokabeln.Main.main()].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.Vokabeln [:org.johnils.vokabeln.start.Main.main()].executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;onboarding.tips.debug.path&quot;: &quot;C:/Users/Fried/IdeaProjects/Vokabeln/src/main/java/org/example/Main.java&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\Fried\IdeaProjects\Vokabeln\src\main\resources\websites\login" />
@@ -119,9 +107,22 @@
       <option name="presentableId" value="Default" />
       <updated>1758903207238</updated>
     </task>
+    <task id="LOCAL-00001" summary="Initial Files">
+      <option name="closed" value="true" />
+      <created>1759183126676</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1759183126676</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="UnknownFeatures">
     <option featureType="com.intellij.fileTypeFactory" implementationName="*.lang" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Initial Files" />
+    <option name="LAST_COMMIT_MESSAGE" value="Initial Files" />
   </component>
 </project>
