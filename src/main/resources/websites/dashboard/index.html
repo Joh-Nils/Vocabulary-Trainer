@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="en">
+<style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f2f5;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* Header */
+    header {
+      background: white;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 1.5rem;
+    }
+
+    .profile {
+      position: relative;
+      cursor: pointer;
+    }
+
+    .profile-menu {
+      display: none;
+      position: absolute;
+      right: 0;
+      top: 100%;
+      background: white;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      min-width: 120px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+
+    .profile-menu button {
+      width: 100%;
+      padding: 10px;
+      background: none;
+      border: none;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .profile-menu button:hover {
+      background: #f0f0f0;
+    }
+
+    /* Main content */
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    .languages {
+      background: white;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      width: 500px;
+      max-width: 90%;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      position: relative;
+    }
+
+    .languages h2 {
+      margin: 0 0 1rem 0;
+      text-align: center;
+      font-size: 24px;
+    }
+
+    .language-item {
+      padding: 15px;
+      display: flex;
+      justify-content: space-between;
+      background: #f8f9fa;
+      border-radius: 5px;
+      font-size: 18px;
+      border: 1px solid #e0e0e0;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    .language-item:hover {
+      background: #e9f0ff;
+      transform: translateY(-2px);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .language-item .language-name {
+      flex: 1; /* text takes remaining space */
+    }
+
+    .delete-language-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #dc3545;
+      font-size: 16px;
+      margin-left: 10px;
+      transition: color 0.2s;
+    }
+
+    .delete-language-btn:hover {
+      color: #a71d2a;
+    }
+
+    .add-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: none;
+      background: #007bff;
+      color: white;
+      font-size: 24px;
+      cursor: pointer;
+      position: absolute;
+      bottom: 15px;
+      right: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .add-btn:hover {
+      background: #0056b3;
+    }
+
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.5);
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      background: white;
+      padding: 2rem;
+      border-radius: 10px;
+      width: 300px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .modal-content input {
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .modal-content button {
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      background: #007bff;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .modal-content button:hover {
+      background: #0056b3;
+    }
+
+    #dashboardPage {
+      padding: 20px;
+      transition: opacity 0.2s ease;
+    }
+
+    #vocabPage {
+      display: flex;
+      justify-content: center;
+      padding: 30px;
+      transition: opacity 0.2s ease;
+    }
+
+    .vocab-header {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+
+    #backBtn {
+      background: none;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+      color: #007bff;
+      transition: color 0.2s;
+    }
+
+    #backBtn:hover {
+      color: #0056b3;
+    }
+
+    #startSessionBtn {
+      padding: 8px 14px;
+      background: #007bff;
+      border: none;
+      border-radius: 6px;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    #startSessionBtn:hover {
+      background: #0056b3;
+    }
+
+    .add-vocab {
+      display: flex;
+      gap: 10px;
+    }
+    .add-vocab button {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: none;
+      background: #007bff;
+      color: white;
+      font-size: 20px;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+
+    .add-vocab button:hover {
+      background: #0056b3;
+    }
+    .add-vocab input {
+      flex: 1;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 16px;
+    }
+
+    #vocabList {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 20px;
+    }
+
+    .vocab-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 14px;
+      border: 1px solid #eee;
+      border-radius: 8px;
+      background: #fafafa;
+      transition: background 0.2s;
+    }
+
+    .vocab-item:hover {
+      background: #f0f8ff;
+    }
+
+    .vocab-item .actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .vocab-item button {
+      border: none;
+      background: none;
+      cursor: pointer;
+      font-size: 16px;
+      transition: color 0.2s;
+    }
+
+    .vocab-item .edit-btn:hover {
+      color: #007bff;
+    }
+
+    .vocab-item .delete-btn:hover {
+      color: #dc3545;
+    }
+</style>
+<head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>VokabelTrainer Dashboard</title>
+    </head>
+    <body>
+    <!-- Header -->
+    <header>
+        <h1>VokabelTrainer</h1>
+        <div class="profile" id="profile">
+            <span id="username">Loading...</span> ▼
+            <div class="profile-menu" id="profileMenu">
+                <button id="logoutBtn">Log Out</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Dashboard Page -->
+    <main id="dashboardPage">
+        <div class="languages" id="languageList">
+            <h2>Languages</h2>
+            <!-- Language items will be added here -->
+            <button class="add-btn" id="addLanguageBtn">+</button>
+        </div>
+    </main>
+
+    <!-- Modal for adding language -->
+    <div class="modal" id="languageModal">
+        <div class="modal-content">
+            <input type="text" id="newLanguage" placeholder="Language Name">
+            <button id="submitLanguage">Add Language</button>
+        </div>
+    </div>
+
+    <!-- Session Modal -->
+    <div class="modal" id="sessionModal">
+        <div class="modal-content">
+            <h3>Start Session</h3>
+            <input type="number" id="sessionCount" placeholder="Number of vocabulary">
+            <button id="startSessionConfirm">Start</button>
+            <button id="closeSessionModal">Cancel</button>
+        </div>
+    </div>
+
+    <!-- Edit Vocabulary Modal -->
+    <div class="modal" id="editVocabModal">
+        <div class="modal-content">
+            <h3>Edit Vocabulary</h3>
+            <input type="text" id="editWordInput" placeholder="Word">
+            <input type="text" id="editTranslationInput" placeholder="Translation">
+            <div style="display:flex; gap:10px; justify-content:flex-end;">
+                <button id="saveEditVocabBtn">Save</button>
+                <button id="cancelEditVocabBtn">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Vocabulary Page -->
+    <main id="vocabPage" style="display:none;">
+        <div class="vocab-container">
+            <div class="vocab-header">
+                <button id="backBtn">← </button>
+                <h2 id="vocabLanguageTitle"></h2>
+                <button id="startSessionBtn">Start Session</button>
+            </div>
+
+            <div class="add-vocab">
+                <input type="text" id="vocabWord" placeholder="Word">
+                <input type="text" id="vocabTranslation" placeholder="Translation">
+                <button id="addVocabBtn">+</button>
+            </div>
+
+            <div id="vocabList"></div>
+        </div>
+    </main>
+    <script>
+        document.addEventListener("DOMContentLoaded", async () => {
+          try {
+            const response = await fetch("/auth/getName");
+            if (response.ok) {
+              const name = await response.text();
+              document.getElementById("username").textContent = name || "User";
+            } else {
+              console.error("Failed to fetch username:", response.statusText);
+              document.getElementById("username").textContent = "User";
+            }
+          } catch (error) {
+            console.error("Error fetching username:", error);
+            document.getElementById("username").textContent = "User";
+          }
+
+        try {
+            const langResponse = await fetch("/db/languages");
+            if (langResponse.ok) {
+              const languages = await langResponse.json();
+              const languageList = document.getElementById("languageList");
+
+              const addBtn = document.getElementById("addLanguageBtn");
+              languageList.querySelectorAll(".language-item").forEach(e => e.remove());
+
+              languages.forEach(lang => addLanguageToDOM(lang));
+            } else {
+              console.error("Failed to fetch languages:", langResponse.statusText);
+            }
+          } catch (error) {
+            console.error("Error fetching languages:", error);
+          }
+        });
+
+        const profile = document.getElementById("profile");
+        const profileMenu = document.getElementById("profileMenu");
+        profile.addEventListener("click", () => {
+          profileMenu.style.display = profileMenu.style.display === "block" ? "none" : "block";
+        });
+
+
+        document.getElementById("logoutBtn").addEventListener("click", () => {
+            fetch("/auth/logout", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({})
+            });
+
+          window.location.href = "/";
+        });
+
+
+        const modal = document.getElementById("languageModal");
+        const addBtn = document.getElementById("addLanguageBtn");
+        const submitLanguage = document.getElementById("submitLanguage");
+        const languageList = document.getElementById("languageList");
+
+        addBtn.addEventListener("click", () => {
+          modal.style.display = "flex";
+          document.getElementById("newLanguage").value = "";
+        });
+
+        const languageInput = document.getElementById("newLanguage");
+
+        languageInput.addEventListener("keydown", async (e) => {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            submitNewLanguage();
+          }
+        });
+
+        submitLanguage.addEventListener("click", submitNewLanguage);
+
+        async function submitNewLanguage() {
+          const name = languageInput.value.trim();
+          if (!name) return;
+
+          try {
+            const response = await fetch("/db/addLanguage", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ name })
+            });
+
+            if (response.ok) {
+              addLanguageToDOM(name);
+              modal.style.display = "none";
+              languageInput.value = "";
+            } else {
+              const errorText = await response.text();
+              alert("Error adding language: " + errorText);
+            }
+          } catch (error) {
+            alert("Error connecting to server: " + error.message);
+          }
+        }
+        async function openLanguage(name) {
+          currentLanguage = name;
+          vocabLanguageTitle.textContent = currentLanguage;
+          vocabList.innerHTML = "";
+          vocabModal.style.display = "flex";
+
+          try {
+            const res = await fetch(`/db/vocabulary?language=${encodeURIComponent(currentLanguage)}`);
+            if (res.ok) {
+              const vocab = await res.json();
+              vocab.forEach(v => addVocabToDOM(v.word, v.translation));
+            }
+          } catch (error) {
+            alert("Error fetching vocabulary: " + error.message);
+          }
+        }
+
+        window.addEventListener("click", (e) => {
+          if (e.target === modal) {
+            modal.style.display = "none";
+          }
+        });
+
+        const dashboardPage = document.getElementById("dashboardPage");
+        const vocabPage = document.getElementById("vocabPage");
+        const vocabLanguageTitle = document.getElementById("vocabLanguageTitle");
+        const vocabList = document.getElementById("vocabList");
+        const backBtn = document.getElementById("backBtn");
+        let currentLanguage = "";
+
+        function showDashboard() {
+          dashboardPage.style.display = "flex";
+          vocabPage.style.display = "none";
+        }
+
+        function showVocabPage(language) {
+          currentLanguage = language;
+          vocabLanguageTitle.textContent = language;
+          dashboardPage.style.display = "none";
+          vocabPage.style.display = "block";
+          loadVocabulary(language);
+        }
+
+        function addLanguageToDOM(name) {
+          const div = document.createElement("div");
+          div.className = "language-item";
+
+          const span = document.createElement("span");
+          span.className = "language-name";
+          span.textContent = name;
+          span.style.flex = "1";
+          span.addEventListener("click", () => showVocabPage(name));
+
+          const deleteBtn = document.createElement("button");
+          deleteBtn.className = "delete-language-btn";
+          deleteBtn.textContent = "🗑";
+          deleteBtn.addEventListener("click", async (e) => {
+            e.stopPropagation();
+            if (!confirm(`Delete language "${name}"?`)) return;
+
+            try {
+              const res = await fetch("/db/deleteLanguage", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ name })
+              });
+              if (res.ok) div.remove();
+              else alert("Failed to delete language.");
+            } catch (err) {
+              console.error("Error deleting language:", err);
+            }
+          });
+
+          div.appendChild(span);
+          div.appendChild(deleteBtn);
+
+          const addBtn = document.getElementById("addLanguageBtn");
+          const languageList = document.getElementById("languageList");
+          languageList.insertBefore(div, addBtn);
+        }
+
+        async function loadVocabulary(language) {
+          vocabList.innerHTML = "";
+          try {
+            const res = await fetch(`/db/vocabulary?language=${encodeURIComponent(language)}`);
+            if (res.ok) {
+              const vocab = await res.json(); // [{word, translation}]
+              vocab.forEach(v => addVocabToDOM(v.word, v.translation));
+            }
+          } catch (err) {
+            console.error("Error loading vocabulary:", err);
+          }
+        }
+
+        function addVocabToDOM(word, translation) {
+          const list = document.getElementById("vocabList");
+
+          const div = document.createElement("div");
+          div.className = "vocab-item";
+
+          const text = document.createElement("span");
+          text.textContent = `${word} - ${translation}`;
+
+          const actions = document.createElement("div");
+          actions.className = "actions";
+
+          const editBtn = document.createElement("button");
+          editBtn.className = "edit-btn";
+          editBtn.textContent = "✎";
+          editBtn.addEventListener("click", () => {
+            openEditVocabModal(div,word,translation);
+          });
+
+          const deleteBtn = document.createElement("button");
+          deleteBtn.className = "delete-btn";
+          deleteBtn.textContent = "🗑";
+          deleteBtn.addEventListener("click", async () => {
+            if (!confirm(`Delete "${word}"?`)) return;
+            try {
+              const res = await fetch("/db/deleteVocab", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ language: currentLanguage, word }),
+              });
+              if (res.ok) {
+                div.remove();
+              } else {
+                alert("Failed to delete vocabulary.");
+              }
+            } catch (err) {
+              console.error("Error deleting vocab:", err);
+            }
+          });
+
+          actions.appendChild(editBtn);
+          actions.appendChild(deleteBtn);
+
+          div.appendChild(text);
+          div.appendChild(actions);
+
+          list.appendChild(div);
+        }
+
+        async function submitVocab() {
+          const word = document.getElementById("vocabWord").value.trim();
+          const translation = document.getElementById("vocabTranslation").value.trim();
+          if (!word || !translation) return;
+
+          try {
+            const res = await fetch("/db/addVocabulary", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ language: currentLanguage, word, translation })
+            });
+            if (res.ok) {
+              addVocabToDOM(word, translation);
+              document.getElementById("vocabWord").value = "";
+              document.getElementById("vocabTranslation").value = "";
+            } else {
+              alert(await res.text());
+            }
+          } catch (err) {
+            alert("Error connecting to server: " + err.message);
+          }
+        }
+
+        document.getElementById("addVocabBtn").addEventListener("click", submitVocab);
+        ["vocabWord", "vocabTranslation"].forEach(id => {
+          document.getElementById(id).addEventListener("keydown", e => {
+            if (e.key === "Enter") submitVocab();
+          });
+        });
+
+        backBtn.addEventListener("click", showDashboard);
+
+        const sessionModal = document.getElementById("sessionModal");
+        const startSessionConfirm = document.getElementById("startSessionConfirm");
+        const sessionCount = document.getElementById("sessionCount");
+        const startSessionBtn = document.getElementById("startSessionBtn");
+        const closeSessionModal = document.getElementById("closeSessionModal");
+
+        startSessionBtn.addEventListener("click", () => {
+          sessionModal.style.display = "flex";
+        });
+
+        closeSessionModal.addEventListener("click", () => {
+          sessionModal.style.display = "none";
+        });
+
+        startSessionConfirm.addEventListener("click", () => {
+          sessionModal.style.display = "none";
+
+          const number = sessionCount.value.trim();
+
+
+        });
+
+        sessionModal.addEventListener("click", (e) => {
+          if (e.target === sessionModal) {
+            sessionModal.style.display = "none";
+          }
+        });
+
+
+        const editVocabModal = document.getElementById("editVocabModal");
+        const editWordInput = document.getElementById("editWordInput");
+        const editTranslationInput = document.getElementById("editTranslationInput");
+        const saveEditVocabBtn = document.getElementById("saveEditVocabBtn");
+        const cancelEditVocabBtn = document.getElementById("cancelEditVocabBtn");
+
+        let vocabBeingEdited = null;
+        let oldWord = "";
+
+        function openEditVocabModal(div, word, translation) {
+          vocabBeingEdited = div;
+          oldWord = word;
+          editWordInput.value = word;
+          editTranslationInput.value = translation;
+          editVocabModal.style.display = "flex";
+        }
+
+        saveEditVocabBtn.addEventListener("click", async () => {
+          const newWord = editWordInput.value.trim();
+          const newTranslation = editTranslationInput.value.trim();
+          if (!newWord || !newTranslation) return;
+
+          try {
+            const res = await fetch("/db/editVocab", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                language: currentLanguage,
+                oldWord,
+                newWord,
+                newTranslation
+              }),
+            });
+            if (res.ok) {
+              vocabBeingEdited.querySelector("span").textContent = `${newWord} - ${newTranslation}`;
+              editVocabModal.style.display = "none";
+            } else {
+              alert("Failed to edit vocabulary.");
+            }
+          } catch (err) {
+            console.error("Error editing vocab:", err);
+          }
+        });
+
+        cancelEditVocabBtn.addEventListener("click", () => {
+          editVocabModal.style.display = "none";
+        });
+
+        editVocabModal.addEventListener("click", (e) => {
+          if (e.target === editVocabModal) editVocabModal.style.display = "none";
+        });
+
+
+    </script>
+
+    </body>
+</html>
