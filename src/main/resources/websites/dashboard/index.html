@@ -462,14 +462,12 @@
         });
 
 
-        document.getElementById("logoutBtn").addEventListener("click", () => {
-            fetch("/auth/logout", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({})
+        document.getElementById("logoutBtn").addEventListener("click", async () => {
+            await fetch("/auth/logout", {
+              method: "POST"
             });
+            window.location.href = "/";
 
-          window.location.href = "/";
         });
 
 
@@ -779,6 +777,18 @@
         let currentVocab = null; // store the word + translation
 
         async function startSession() {
+            const res = await fetch("/db/session/start", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({language: currentLanguage})
+
+            });
+
+            if (!res.ok) {
+                alert("Error while starting session");
+                return;
+            }
+
           document.getElementById("sessionLanguage").textContent = currentLanguage;
 
           document.getElementById("vocabPage").style.display = "none";

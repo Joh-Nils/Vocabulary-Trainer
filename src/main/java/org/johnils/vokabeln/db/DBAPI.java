@@ -239,12 +239,34 @@ public class DBAPI {
     //SESSION
     @PostMapping("/session/start")
     public ResponseEntity<String> startSession(HttpServletRequest request, @RequestBody Map<String, String> body) {
+        String language = body.get("language");
+        Cookie sessionCookie = Main.getSession(request);
+        if (sessionCookie == null || !AuthController.loggedIn.containsKey(sessionCookie.getValue())) {
+            return ResponseEntity.status(401).body("not authorized");
+        }
+
+        SessionController.startSession(UserController.users.get(AuthController.loggedIn.get(sessionCookie.getValue())),language);
+
+        return ResponseEntity.ok("ok"); //TODO
+    }
+    @PostMapping("/session/end")
+    public ResponseEntity<String> endSession(HttpServletRequest request) {
+        Cookie sessionCookie = Main.getSession(request);
+        if (sessionCookie == null || !AuthController.loggedIn.containsKey(sessionCookie.getValue())) {
+            return ResponseEntity.status(401).body("not authorized");
+        }
+
+        SessionController.endSession(UserController.users.get(AuthController.loggedIn.get(sessionCookie.getValue())));
 
         return ResponseEntity.ok("ok"); //TODO
     }
     @PostMapping("/session/getVocab")
-    public Vocab getSessionVocab(HttpServletRequest request, @RequestBody Map<String, String> body) {
+    public Vocab getSessionVocab(HttpServletRequest request) {
+        Cookie sessionCookie = Main.getSession(request);
+        if (sessionCookie == null || !AuthController.loggedIn.containsKey(sessionCookie.getValue())) {
+            return null;
+        }
 
-        return new Vocab("Hello", "There"); //TODO
+        return SessionController.getVocab(UserController.users.get(AuthController.loggedIn.get(sessionCookie.getValue())));
     }
 }

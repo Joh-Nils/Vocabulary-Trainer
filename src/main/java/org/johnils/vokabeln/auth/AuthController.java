@@ -50,18 +50,18 @@ public class AuthController {
         }
     }
     @PostMapping("/delete")
-    public ResponseEntity<String> delete(HttpServletRequest request, @RequestBody Map<String, String> body) {
+    public ResponseEntity<String> delete(HttpServletRequest request) {
         Cookie sessionCookie = Main.getSession(request);
         if (sessionCookie == null) {
             return ResponseEntity.status(401).body("not ok");
     }
 
-        UserController.deleteUser(loggedIn.get(sessionCookie));
+        UserController.deleteUser(loggedIn.get(sessionCookie.getValue()));
         loggedIn.remove(sessionCookie.getValue());
         return ResponseEntity.ok("ok");
     }
     @PostMapping("/logout")
-    public ResponseEntity<String> logout(HttpServletRequest request, @RequestBody Map<String, String> body) {
+    public ResponseEntity<String> logout(HttpServletRequest request) {
         Cookie sessionCookie = Main.getSession(request);
         if (sessionCookie == null) {
             return ResponseEntity.status(401).body("not ok");

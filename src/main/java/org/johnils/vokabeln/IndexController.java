@@ -19,7 +19,7 @@ public class IndexController {
 
     static {
         try {
-            LoginFile = new String(IndexController.class.getResource("/Websites/Login/index.html").openStream().readAllBytes(), StandardCharsets.UTF_8);
+            LoginFile = new String(IndexController.class.getResource("/websites/login/index.html").openStream().readAllBytes(), StandardCharsets.UTF_8);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

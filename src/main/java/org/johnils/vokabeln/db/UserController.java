@@ -61,7 +61,7 @@ public class UserController {
                     .forEach(path -> {
                         try {
                             Files.delete(path);
-                        } catch (IOException _) {
+                        } catch (IOException ignored) {
 
                         }
                     });

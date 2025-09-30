@@ -19,7 +19,7 @@ public class DashboardController {
 
     static {
         try {
-            index = new String(IndexController.class.getResource("/Websites/Dashboard/index.html").openStream().readAllBytes(), StandardCharsets.UTF_8);
+            index = new String(IndexController.class.getResource("/websites/dashboard/index.html").openStream().readAllBytes(), StandardCharsets.UTF_8);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
