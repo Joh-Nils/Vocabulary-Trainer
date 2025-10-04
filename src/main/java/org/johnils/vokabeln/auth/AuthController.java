@@ -50,11 +50,15 @@ public class AuthController {
         }
     }
     @PostMapping("/delete")
-    public ResponseEntity<String> delete(HttpServletRequest request) {
+    public ResponseEntity<String> delete(HttpServletRequest request, @RequestBody Map<String, String> body) {
+        String password = body.get("password");
         Cookie sessionCookie = Main.getSession(request);
         if (sessionCookie == null) {
             return ResponseEntity.status(401).body("not ok");
-    }
+        }
+        if (!UserController.authorize(loggedIn.get(sessionCookie.getValue()), password)) {
+            return ResponseEntity.status(401).body("not authorized");
+        }
 
         UserController.deleteUser(loggedIn.get(sessionCookie.getValue()));
         loggedIn.remove(sessionCookie.getValue());

@@ -184,6 +184,54 @@
     .modal-content button:hover {
       background: #0056b3;
     }
+    .criticalModal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.5);
+      justify-content: center;
+      align-items: center;
+    }
+
+    .criticalModal-content {
+      background: white;
+      padding: 2rem;
+      border-radius: 10px;
+      width: 300px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .criticalModal-content h3,
+    .criticalModal-content h4 {
+      text-align: center;
+      margin-top: 0;
+    }
+
+    .criticalModal-content input {
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .criticalModal-content button {
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      background: #ff0b0b;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .criticalModal-content button:hover {
+      background: #e00101;
+    }
     #submitAnswer {
       padding: 10px;
       border: none;
@@ -327,6 +375,12 @@
     .vocab-item .delete-btn:hover {
       color: #dc3545;
     }
+
+    #questionWord {
+        font-size: 50px;
+
+    }
+
 </style>
 <head>
         <meta charset="UTF-8">
@@ -340,7 +394,8 @@
         <div class="profile" id="profile">
             <span id="username">Loading...</span> ▼
             <div class="profile-menu" id="profileMenu">
-                <button id="logoutBtn">Log Out</button>
+                <button id="logoutBtn" style="color: orange">Log Out</button>
+                <button id="deleteUserBtn" style="color: red">Delete Account</button>
             </div>
         </div>
     </header>
@@ -353,6 +408,15 @@
             <button class="add-btn" id="addLanguageBtn">+</button>
         </div>
     </main>
+
+    <div class="criticalModal" id="deleteUserModal">
+        <div class="criticalModal-content">
+            <h3>Delete Account</h3>
+            <h4>Please enter your password:</h4>
+            <input type="password" id="deleteUserPassword" placeholder="Password">
+            <button id="deleteUser">delete</button>
+        </div>
+    </div>
 
     <!-- Modal for adding language -->
     <div class="modal" id="languageModal">
@@ -411,13 +475,24 @@
             <h2 id="sessionLanguage" style="text-align:center; flex:1;">Language</h2>
         </header>
 
-        <main style="display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:80vh;">
+        <main id="sessionInputs" style="display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:80vh;">
             <h3 id="questionWord">Loading...</h3>
 
-            <input type="text" id="answerInput" placeholder="Your translation" style="margin: 15px 0; padding: 10px; font-size: 16px; width: 300px; text-align:center;">
+            <!-- Answer input + submit -->
+            <div id="answerSection" style="display:flex; flex-direction:column; align-items:center;">
+                <input type="text" id="answerInput" placeholder="Your translation" style="margin: 15px 0; padding: 10px; font-size: 16px; width: 300px; text-align:center;">
+            </div>
             <button id="submitAnswer">Submit</button>
+        </main>
 
-            <p id="feedback" style="margin-top: 15px; font-weight:bold;"></p>
+        <main id="sessionResults"
+              style="display:none; flex-direction:column; align-items:center; justify-content:center; min-height:80vh;">
+            <h2>Your Results</h2>
+
+            <div style="display:flex; gap:40px; margin-top:20px;">
+                <p id="correctCount" style="color:green; font-weight:bold;">Correct: 0</p>
+                <p id="wrongCount" style="color:red; font-weight:bold;">Wrong: 0</p>
+            </div>
         </main>
     </div>
 
@@ -469,6 +544,33 @@
             window.location.href = "/";
 
         });
+        document.getElementById("deleteUserBtn").addEventListener("click", async () => {
+            document.getElementById("deleteUserModal").style.display = "flex";
+        });
+
+        document.getElementById("deleteUser").addEventListener("click", async () => {
+            deleteUser(document.getElementById("deleteUserPassword").value);
+        });
+
+        async function deleteUser(password) {
+            try {
+            const res = await fetch("/auth/delete", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ password })
+            });
+            if (res.ok) {
+                window.location.href = "/";
+            }
+            else {
+                document.getElementById("deleteUserModal").style.display = "none";
+                alert("Couldn't delete User: " + response.text());
+            }
+            }
+            catch(error) {
+                alert("Couldn't delete User");
+            }
+        }
 
 
         const modal = document.getElementById("languageModal");
@@ -544,6 +646,9 @@
         const vocabList = document.getElementById("vocabList");
         const backBtn = document.getElementById("backBtn");
         let currentLanguage = "";
+        let number = 0;
+        let count = 0;
+        let inSession = false;
 
         function showDashboard() {
           dashboardPage.style.display = "flex";
@@ -707,7 +812,9 @@
         startSessionConfirm.addEventListener("click", () => {
           sessionModal.style.display = "none";
 
-          const number = sessionCount.value.trim();
+          number = parseInt(sessionCount.value.trim());
+          count = 0;
+          inSession = true;
 
           startSession();
         });
@@ -774,7 +881,7 @@
 
         //TODO
 
-        let currentVocab = null; // store the word + translation
+        let currentVocab = null;
 
         async function startSession() {
             const res = await fetch("/db/session/start", {
@@ -793,12 +900,17 @@
 
           document.getElementById("vocabPage").style.display = "none";
           document.getElementById("sessionPage").style.display = "block";
+          document.getElementById("sessionInputs").style.display = "flex";
+          document.getElementById("sessionResults").style.display = "none";
+
 
           await loadNextVocab();
         }
 
 
         async function loadNextVocab() {
+          document.getElementById("answerInput").addEventListener("keypress", handleEnterSubmit);
+
           try {
             const res = await fetch("/db/session/getVocab", {
                 method: "POST",
@@ -806,12 +918,21 @@
                 body: JSON.stringify({language: currentLanguage})
             });
             if (res.ok) {
+              count++;
               currentVocab = await res.json();
-              // Example response: { word: "Haus", translation: "house", language: "German" }
 
               document.getElementById("questionWord").textContent = currentVocab.word;
+              document.getElementById("questionWord").style.color = "Black";
               document.getElementById("answerInput").value = "";
-              document.getElementById("feedback").textContent = "";
+
+
+
+              document.getElementById("answerSection").style.display = "flex";
+              document.getElementById("answerInput").focus();
+
+              const submitBtn = document.getElementById("submitAnswer");
+              submitBtn.textContent = "Submit";
+              submitBtn.onclick = checkAnswer;
             } else {
               document.getElementById("questionWord").textContent = "No vocab available!";
             }
@@ -820,31 +941,116 @@
           }
         }
 
-        function checkAnswer() {
-          const userAnswer = document.getElementById("answerInput").value.trim().toLowerCase();
-          const feedback = document.getElementById("feedback");
+        async function checkAnswer() {
+            document.getElementById("answerInput").removeEventListener("keypress", handleEnterSubmit);
 
-          if (!currentVocab) return;
+            const userAnswer = document.getElementById("answerInput").value.trim();
 
-          if (userAnswer === currentVocab.translation.toLowerCase()) {
-            feedback.textContent = "✅ Correct!";
-            feedback.style.color = "green";
-          } else {
-            feedback.textContent = `❌ Wrong! Correct answer: ${currentVocab.translation}`;
-            feedback.style.color = "red";
+            if (!currentVocab || !userAnswer) return;
+
+            try {
+            const res = await fetch("/db/session/correct", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                translation: userAnswer,
+                language: currentVocab.language
+              })
+            });
+
+            if (res.ok) {
+              const result = await res.json();
+
+              const feedback = document.getElementById("questionWord");
+              feedback.style.display = "block";
+              feedback.textContent = result.correction;
+              feedback.style.color = result.correct ? "green" : "red";
+
+              document.getElementById("answerSection").style.display = "none";
+              const submitBtn = document.getElementById("submitAnswer");
+              submitBtn.textContent = "Next";
+              submitBtn.style.display = "inline-block";
+
+              if (count >= number) {
+                submitBtn.onclick = showData;
+              }
+              else {
+                submitBtn.onclick = loadNextVocab;
+              }
+
+              document.addEventListener("keydown", handleNextEnter);
+            } else {
+              console.error("Failed to check answer");
+            }
+            } catch (err) {
+            console.error("Error checking answer:", err);
+            }
+        }
+        function handleEnterSubmit(e) {
+          if (e.key === "Enter") {
+            checkAnswer();
+            e.preventDefault();
           }
         }
 
-        document.getElementById("submitAnswer").addEventListener("click", checkAnswer);
+        function handleNextEnter(e) {
+          if (e.key === "Enter") {
+            document.removeEventListener("keydown", handleNextEnter);
+            if (count >= number) {
+              showData();
+            }
+            else {
+              loadNextVocab();
+            }
+          }
+        }
 
-        document.getElementById("answerInput").addEventListener("keypress", (e) => {
-          if (e.key === "Enter") checkAnswer();
-        });
+
 
         document.getElementById("backToVocab").addEventListener("click", () => {
           document.getElementById("sessionPage").style.display = "none";
           document.getElementById("vocabPage").style.display = "block";
+
+          if (inSession) {
+            fetch("/db/session/end", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({language: currentLanguage})
+            });
+            inSession = false;
+          }
         });
+
+        async function showData() {
+          if (inSession) {
+              inSession = false;
+              document.getElementById("sessionInputs").style.display = "none";
+              document.getElementById("sessionResults").style.display = "flex";
+
+
+            try {
+              const res = await fetch("/db/session/end", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({language: currentLanguage})
+              });
+
+            if (res.ok) {
+              const result = await res.json();
+
+              document.getElementById("correctCount").textContent = "Correct: " + result.right;
+              document.getElementById("correctCount").style.color = "Green";
+              document.getElementById("wrongCount").textContent = "Wrong: " + result.wrong;
+              document.getElementById("wrongCount").style.color = "Red";
+
+            } else {
+              console.error("Failed to get Data");
+            }
+            } catch (err) {
+              console.error("Error ending Session:", err);
+            }
+          }
+        }
     </script>
 
     </body>

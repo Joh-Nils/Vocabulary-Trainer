@@ -70,7 +70,7 @@ public class UserController {
             LOGGER.error("Couldn't delete User '{}' {}",name,e);
             return;
         }
-        LOGGER.info("Deleted User '{}'",user);
+        LOGGER.info("Deleted User '{}'",user.name());
         users.remove(name);
     }
 

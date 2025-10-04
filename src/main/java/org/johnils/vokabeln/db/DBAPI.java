@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.johnils.vokabeln.Main;
 import org.johnils.vokabeln.auth.AuthController;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -183,7 +184,7 @@ public class DBAPI {
         try {
             List<String> lines = Files.readAllLines(lang.toPath());
 
-            lines.removeIf(line -> line.startsWith(word));
+            lines.removeIf(line -> line.startsWith(word + "="));
 
             // Write back to the same file
             Files.write(lang.toPath(), lines);
@@ -216,11 +217,11 @@ public class DBAPI {
             List<String> lines = Files.readAllLines(lang.toPath());
 
             for (String line: lines) {
-                if (line.startsWith(newWord)) {
+                if (line.startsWith(newWord + "=")) {
                     return ResponseEntity.status(401).body("Vocab with that word already exists");
                 }
 
-                if (line.startsWith(old)) {
+                if (line.startsWith(old + "=")) {
                     lines.set(lines.indexOf(line), newWord + "=" + newTranslation);
                     break;
                 }
@@ -250,15 +251,13 @@ public class DBAPI {
         return ResponseEntity.ok("ok"); //TODO
     }
     @PostMapping("/session/end")
-    public ResponseEntity<String> endSession(HttpServletRequest request) {
+    public ResponseEntity<SessionData> endSession(HttpServletRequest request) {
         Cookie sessionCookie = Main.getSession(request);
         if (sessionCookie == null || !AuthController.loggedIn.containsKey(sessionCookie.getValue())) {
-            return ResponseEntity.status(401).body("not authorized");
+            return ResponseEntity.status(401).body(null);
         }
 
-        SessionController.endSession(UserController.users.get(AuthController.loggedIn.get(sessionCookie.getValue())));
-
-        return ResponseEntity.ok("ok"); //TODO
+        return ResponseEntity.ok(SessionController.endSession(UserController.users.get(AuthController.loggedIn.get(sessionCookie.getValue()))));
     }
     @PostMapping("/session/getVocab")
     public Vocab getSessionVocab(HttpServletRequest request) {
@@ -268,5 +267,15 @@ public class DBAPI {
         }
 
         return SessionController.getVocab(UserController.users.get(AuthController.loggedIn.get(sessionCookie.getValue())));
+    }
+    @PostMapping("/session/correct")
+    public Correction correctVocab(HttpServletRequest request, @RequestBody Map<String, String> body) {
+        String translation = body.get("translation");
+        Cookie sessionCookie = Main.getSession(request);
+        if (sessionCookie == null || !AuthController.loggedIn.containsKey(sessionCookie.getValue())) {
+            return null;
+        }
+
+        return SessionController.correct(UserController.users.get(AuthController.loggedIn.get(sessionCookie.getValue())), translation);
     }
 }

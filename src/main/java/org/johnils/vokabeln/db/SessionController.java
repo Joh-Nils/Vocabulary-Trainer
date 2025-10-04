@@ -17,12 +17,23 @@ public class SessionController {
     public static void startSession(User user, String language) {
         sessions.put(user,load(user, language));
     }
-    public static void endSession(User user) {
+    public static SessionData endSession(User user) {
+        if (sessions.get(user)== null) return null;
+
+        SessionData data = sessions.get(user).getData();
+
         sessions.remove(user);
+
+        return data;
     }
 
     public static Vocab getVocab(User user) {
         return sessions.get(user).getVocab();
+    }
+    public static Correction correct(User user, String translation) {
+        if (sessions.get(user) == null) return new Correction(false,"");
+        boolean correct = sessions.get(user).correct(translation);
+        return new Correction(correct, sessions.get(user).getLastVocab().translation());
     }
 
 
